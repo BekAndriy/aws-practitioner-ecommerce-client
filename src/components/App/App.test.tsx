@@ -32,17 +32,17 @@ test("Renders products list", async () => {
       return res(
         ctx.status(200),
         ctx.delay(),
-        ctx.json<AvailableProduct[]>(products)
+        ctx.json<AvailableProduct[]>(products),
       );
     }),
     rest.get(`${API_PATHS.cart}/profile/cart`, (req, res, ctx) => {
       return res(ctx.status(200), ctx.json<CartItem[]>([]));
-    })
+    }),
   );
   renderWithProviders(
     <MemoryRouter initialEntries={["/"]}>
       <App />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   await waitForElementToBeRemoved(() => screen.queryByText(/Loading/));
