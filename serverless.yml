@@ -1,11 +1,11 @@
-service: my-store-app
+service: phoneforyoustore
 
 frameworkVersion: "3"
 
 provider:
   name: aws
   runtime: nodejs14.x
-  region: eu-west-1
+  region: eu-central-1
   # setup profile for AWS CLI.
   # profile: node-aws
 
@@ -19,7 +19,8 @@ plugins:
 
 custom:
   client:
-    bucketName: my-store-app
+    domain: phoneforyou.shop
+    bucketName: phoneforyoushop
     distributionFolder: dist
   s3BucketName: ${self:custom.client.bucketName}
 
@@ -36,14 +37,19 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3BucketName}
-        AccessControl: PublicRead
+        # AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: ObjectWriter
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
         # VersioningConfiguration:
         #   Status: Enabled
 
-    ## Specifying the policies to make sure all files inside the Bucket are avaialble to CloudFront
+    ## Specifying the policies to make sure all files inside the Bucket are available to CloudFront
     WebAppS3BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -76,7 +82,7 @@ resources:
           Origins:
             - DomainName: !GetAtt WebAppS3Bucket.RegionalDomainName
               ## An identifier for the origin which must be unique within the distribution
-              Id: myS3Origin
+              Id: phoneForYouStaticS3
               ## In case you don't want to restrict the bucket access use CustomOriginConfig and remove S3OriginConfig
               S3OriginConfig:
                 OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OriginAccessIdentity}
@@ -111,7 +117,7 @@ resources:
               Cookies:
                 Forward: none
             ## The origin id defined above
-            TargetOriginId: myS3Origin
+            TargetOriginId: phoneForYouStaticS3
             ## The protocol that users can use to access the files in the origin. To allow HTTP use `allow-all`
             ViewerProtocolPolicy: redirect-to-https
             Compress: true

@@ -19,6 +19,10 @@ class ServerlessPlugin {
         usage: "Invalidates CloudFront cache",
         lifecycleEvents: ["invalidateCache"],
       },
+      invalidateCloudFrontDistributionCache: {
+        usage: "Invalidates CloudFront cache",
+        lifecycleEvents: ["invalidateCache"],
+      },
     };
 
     this.hooks = {
@@ -26,6 +30,8 @@ class ServerlessPlugin {
       "domainInfo:domainInfo": this.domainInfo.bind(this),
       "invalidateCloudFrontCache:invalidateCache":
         this.invalidateCache.bind(this),
+      "invalidateCloudFrontDistributionCache:invalidateCache":
+        this.invalidateDomainCache.bind(this),
     };
   }
 
@@ -98,10 +104,25 @@ class ServerlessPlugin {
   }
 
   async invalidateCache() {
-    const provider = this.serverless.getProvider("aws");
-
     const domain = await this.domainInfo();
+    const distributions = await this.getDistributions();
+    const distribution = distributions.find(
+      (entry) => entry.DomainName === domain
+    );
+    return this.invalidate(distribution, domain);
+  }
 
+  async invalidateDomainCache() {
+    const { domain } = this.serverless.variables.service.custom.client;
+    const distributions = await this.getDistributions();
+    const distribution = distributions.find(
+      (entry) => entry.Aliases.Items.includes(domain)
+    );
+    return this.invalidate(distribution, domain);
+  }
+
+  async getDistributions() {
+    const provider = this.serverless.getProvider("aws");
     const result = await provider.request(
       "CloudFront",
       "listDistributions",
@@ -110,11 +131,10 @@ class ServerlessPlugin {
       this.options.region
     );
 
-    const distributions = result.DistributionList.Items;
-    const distribution = distributions.find(
-      (entry) => entry.DomainName === domain
-    );
+    return result.DistributionList.Items;
+  }
 
+  async invalidate(distribution, domain) {
     if (distribution) {
       this.serverless.cli.log(
         `Invalidating CloudFront distribution with id: ${distribution.Id}`
