@@ -1,6 +1,5 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 import Container from "@mui/material/Container";
 import Header from "~/components/MainLayout/components/Header";
 import Box from "@mui/material/Box";
@@ -8,12 +7,7 @@ import Box from "@mui/material/Box";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/" underline="hover">
-        Phone For You
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
+      {"Copyright © "}Phone For You {new Date().getFullYear()}.
     </Typography>
   );
 }
@@ -21,8 +15,8 @@ function Copyright() {
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <>
-      <Header />
       <main>
+        <Header />
         <Container sx={{ pb: 8 }} maxWidth="md">
           {children}
         </Container>

@@ -4,10 +4,20 @@ import { availableProducts, orders, products, cart } from "~/mocks/data";
 import { CartItem } from "~/models/CartItem";
 import { Order } from "~/models/Order";
 import { AvailableProduct, Product } from "~/models/Product";
+import { ListResponse } from "~/queries/utils";
 
 export const handlers = [
-  rest.get(`${API_PATHS.bff}/product`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.delay(), ctx.json<Product[]>(products));
+  rest.get(`${API_PATHS.bff}/products`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.delay(),
+      ctx.json<ListResponse<Product>>({
+        list: products,
+        offset: 0,
+        limit: products.length,
+        total: products.length,
+      }),
+    );
   }),
   rest.put(`${API_PATHS.bff}/product`, (req, res, ctx) => {
     return res(ctx.status(200));

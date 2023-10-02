@@ -3,13 +3,14 @@ import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
+import { ListResponse } from "./utils";
 
 export function useAvailableProducts() {
-  return useQuery<AvailableProduct[], AxiosError>(
+  return useQuery<ListResponse<AvailableProduct>, AxiosError>(
     "available-products",
     async () => {
-      const res = await axios.get<AvailableProduct[]>(
-        `${API_PATHS.bff}/product/available`,
+      const res = await axios.get<ListResponse<AvailableProduct>>(
+        `${API_PATHS.product}/products`,
       );
       return res.data;
     },

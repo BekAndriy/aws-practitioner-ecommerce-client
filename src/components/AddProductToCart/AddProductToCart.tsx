@@ -1,4 +1,5 @@
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Product } from "~/models/Product";
 import CartIcon from "@mui/icons-material/ShoppingCart";
 import Add from "@mui/icons-material/Add";
@@ -32,19 +33,29 @@ export default function AddProductToCart({ product }: AddProductToCartProps) {
     }
   };
 
-  return cartItem ? (
-    <>
-      <IconButton disabled={isFetching} onClick={removeProduct} size="large">
-        <Remove color={"secondary"} />
-      </IconButton>
-      <Typography align="center">{cartItem.count}</Typography>
-      <IconButton disabled={isFetching} onClick={addProduct} size="large">
-        <Add color={"secondary"} />
-      </IconButton>
-    </>
-  ) : (
-    <IconButton disabled={isFetching} onClick={addProduct} size="large">
-      <CartIcon color={"secondary"} />
-    </IconButton>
+  return (
+    <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
+      {cartItem ? (
+        <>
+          <IconButton
+            disabled={isFetching}
+            onClick={removeProduct}
+            size="small"
+          >
+            <Remove color={"secondary"} fontSize="small" />
+          </IconButton>
+          <Typography align="center" fontSize="small">
+            {cartItem.count}
+          </Typography>
+          <IconButton disabled={isFetching} onClick={addProduct} size="small">
+            <Add color={"secondary"} fontSize="small" />
+          </IconButton>
+        </>
+      ) : (
+        <IconButton disabled={isFetching} onClick={addProduct} size="small">
+          <CartIcon color={"secondary"} fontSize="small" />
+        </IconButton>
+      )}
+    </Box>
   );
 }
