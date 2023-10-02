@@ -7,6 +7,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Cart from "~/components/MainLayout/components/Cart";
+import Logo from "~/components/Logo/Logo";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 
@@ -25,7 +26,7 @@ export default function Header() {
 
   return (
     <AppBar position="relative">
-      <Toolbar>
+      <Toolbar sx={{ maxWidth: 1200, width: "100%", margin: "auto" }}>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           <Link
             component={RouterLink}
@@ -33,7 +34,7 @@ export default function Header() {
             underline="none"
             to="/"
           >
-            My Store!
+            <Logo />
           </Link>
         </Typography>
 

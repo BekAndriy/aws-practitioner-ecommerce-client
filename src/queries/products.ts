@@ -3,16 +3,17 @@ import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
+import { ListResponse } from "./utils";
 
 export function useAvailableProducts() {
-  return useQuery<AvailableProduct[], AxiosError>(
+  return useQuery<ListResponse<AvailableProduct>, AxiosError>(
     "available-products",
     async () => {
-      const res = await axios.get<AvailableProduct[]>(
-        `${API_PATHS.bff}/product/available`
+      const res = await axios.get<ListResponse<AvailableProduct>>(
+        `${API_PATHS.product}/products`,
       );
       return res.data;
-    }
+    },
   );
 }
 
@@ -20,7 +21,7 @@ export function useInvalidateAvailableProducts() {
   const queryClient = useQueryClient();
   return React.useCallback(
     () => queryClient.invalidateQueries("available-products", { exact: true }),
-    []
+    [],
   );
 }
 
@@ -29,11 +30,11 @@ export function useAvailableProduct(id?: string) {
     ["product", { id }],
     async () => {
       const res = await axios.get<AvailableProduct>(
-        `${API_PATHS.bff}/product/${id}`
+        `${API_PATHS.bff}/product/${id}`,
       );
       return res.data;
     },
-    { enabled: !!id }
+    { enabled: !!id },
   );
 }
 
@@ -42,7 +43,7 @@ export function useRemoveProductCache() {
   return React.useCallback(
     (id?: string) =>
       queryClient.removeQueries(["product", { id }], { exact: true }),
-    []
+    [],
   );
 }
 
@@ -52,7 +53,7 @@ export function useUpsertAvailableProduct() {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    })
+    }),
   );
 }
 
@@ -62,6 +63,6 @@ export function useDeleteAvailableProduct() {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    })
+    }),
   );
 }

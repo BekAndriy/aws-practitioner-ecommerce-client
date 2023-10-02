@@ -24,7 +24,7 @@ export function useInvalidateCart() {
   const queryClient = useQueryClient();
   return React.useCallback(
     () => queryClient.invalidateQueries("cart", { exact: true }),
-    []
+    [],
   );
 }
 
@@ -34,6 +34,6 @@ export function useUpsertCart() {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    })
+    }),
   );
 }

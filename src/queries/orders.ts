@@ -16,7 +16,7 @@ export function useInvalidateOrders() {
   const queryClient = useQueryClient();
   return React.useCallback(
     () => queryClient.invalidateQueries("orders", { exact: true }),
-    []
+    [],
   );
 }
 
@@ -29,7 +29,7 @@ export function useUpdateOrderStatus() {
           Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
         },
       });
-    }
+    },
   );
 }
 
@@ -48,7 +48,7 @@ export function useInvalidateOrder() {
   return React.useCallback(
     (id: string) =>
       queryClient.invalidateQueries(["order", { id }], { exact: true }),
-    []
+    [],
   );
 }
 
@@ -58,6 +58,6 @@ export function useDeleteOrder() {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    })
+    }),
   );
 }
