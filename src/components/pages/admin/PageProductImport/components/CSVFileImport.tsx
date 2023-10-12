@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import axios from "axios";
+import Alerts from "~/utils/alert";
 
 type CSVFileImportProps = {
   url: string;
@@ -34,13 +35,14 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
         name: encodeURIComponent(file?.name || ""),
       },
     });
-    console.log("File to upload: ", file?.name);
-    console.log("Uploading to: ", response.data);
-    const result = await fetch(response.data.url, {
+    await fetch(response.data.url, {
       method: "PUT",
       body: file,
     });
-    console.log("Result: ", result);
+    Alerts.instance.show({
+      message: "Successfully uploaded",
+      type: "success",
+    });
     setFile(null);
   };
   return (

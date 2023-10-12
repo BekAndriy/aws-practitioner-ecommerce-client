@@ -1,8 +1,10 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import "~/queries/init";
 import Header from "~/components/MainLayout/components/Header";
 import Box from "@mui/material/Box";
+import Alerts from "../Alerts/Alerts";
 
 function Copyright() {
   return (
@@ -34,6 +36,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           Thank you for your purchase!
         </Typography>
         <Copyright />
+        <Alerts />
       </Box>
     </>
   );
