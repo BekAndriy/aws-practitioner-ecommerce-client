@@ -10,9 +10,12 @@ import Cart from "~/components/MainLayout/components/Cart";
 import Logo from "~/components/Logo/Logo";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
+import { getAuthorizeURL } from "~/queries/auth";
+import Auth, { useProfile } from "~/utils/auth";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isLogged] = useProfile();
   const open = Boolean(anchorEl);
   const auth = true;
 
@@ -22,6 +25,10 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    Auth.instance.logout();
   };
 
   return (
@@ -79,6 +86,17 @@ export default function Header() {
               >
                 Manage products
               </MenuItem>
+              {isLogged ? (
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              ) : (
+                <MenuItem
+                  component={RouterLink}
+                  to={getAuthorizeURL()}
+                  onClick={handleClose}
+                >
+                  Sign in
+                </MenuItem>
+              )}
             </Menu>
           </div>
         )}
