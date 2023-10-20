@@ -7,9 +7,14 @@ import Alerts from "~/utils/alert";
 type CSVFileImportProps = {
   url: string;
   title: string;
+  localStorageTokenKey?: string;
 };
 
-export default function CSVFileImport({ url, title }: CSVFileImportProps) {
+export default function CSVFileImport({
+  url,
+  title,
+  localStorageTokenKey,
+}: CSVFileImportProps) {
   const [file, setFile] = React.useState<File | null>(null);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +30,8 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
   };
 
   const uploadFile = async () => {
+    const token =
+      localStorageTokenKey && localStorage.getItem(localStorageTokenKey);
     // Get the presigned URL
     const response = await axios({
       method: "GET",
@@ -32,6 +39,13 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
       params: {
         name: encodeURIComponent(file?.name || ""),
       },
+      ...(token
+        ? {
+            headers: {
+              Authorization: token,
+            },
+          }
+        : {}),
     });
     await fetch(response.data.url, {
       method: "PUT",

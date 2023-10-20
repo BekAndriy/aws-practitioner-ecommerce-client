@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import "~/queries/init";
 import Header from "~/components/MainLayout/components/Header";
 import Box from "@mui/material/Box";
 import Alerts from "../Alerts/Alerts";
+import Auth from "~/utils/auth";
 
 function Copyright() {
   return (
@@ -15,6 +16,10 @@ function Copyright() {
 }
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useEffect(() => {
+    Auth.instance.init().catch(() => null);
+  }, []);
+
   return (
     <>
       <main>
