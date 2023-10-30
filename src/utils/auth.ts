@@ -39,7 +39,7 @@ export default class Auth {
   // on load
   async init() {
     this.profile = await this.loadUser().catch((error) => {
-      if (error.status === 401) {
+      if (error.response?.status === 401) {
         return this.refreshAccessToken()
           .then(() => this.loadUser())
           .catch((err) => {

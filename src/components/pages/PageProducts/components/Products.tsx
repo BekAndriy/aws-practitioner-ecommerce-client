@@ -28,7 +28,7 @@ export default function Products() {
       </Typography>
       <Grid container spacing={4}>
         {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {list.map(({ count, ...product }, index) => (
+        {list.map((product, index) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
             <Card
               sx={{ height: "100%", display: "flex", flexDirection: "column" }}

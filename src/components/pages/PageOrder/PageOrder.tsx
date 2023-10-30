@@ -23,6 +23,7 @@ import TableContainer from "@mui/material/TableContainer";
 import Box from "@mui/material/Box";
 import { useQueries } from "react-query";
 import { useInvalidateOrder, useUpdateOrderStatus } from "~/queries/orders";
+import { CartResponse } from "~/queries/utils";
 
 type FormValues = {
   status: OrderStatus;
@@ -35,8 +36,17 @@ export default function PageOrder() {
     {
       queryKey: ["order", { id }],
       queryFn: async () => {
-        const res = await axios.get<Order>(`${API_PATHS.order}/order/${id}`);
-        return res.data;
+        const res = await axios.get<CartResponse<Order>>(
+          `${API_PATHS.order}/order/${id}`,
+          {
+            headers: {
+              Authorization: `Basic ${localStorage.getItem(
+                "authorization_token",
+              )}`,
+            },
+          },
+        );
+        return res.data.data;
       },
     },
     {

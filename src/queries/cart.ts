@@ -1,39 +1,43 @@
-import axios, { AxiosError } from "axios";
-import React from "react";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import axios from "axios";
 import API_PATHS from "~/constants/apiPaths";
-import { CartItem } from "~/models/CartItem";
+import { Cart, CartItemRec } from "~/models/Cart";
+import { CartResponse } from "./utils";
+import { Order } from "~/models/Order";
 
-export function useCart() {
-  return useQuery<CartItem[], AxiosError>("cart", async () => {
-    const res = await axios.get<CartItem[]>(`${API_PATHS.cart}/profile/cart`, {
+export const getCartItems = async () => {
+  const res = await axios.get<CartResponse<Cart>>(
+    `${API_PATHS.cart}/profile/cart`,
+    {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    });
-    return res.data;
-  });
-}
-
-export function useCartData() {
-  const queryClient = useQueryClient();
-  return queryClient.getQueryData<CartItem[]>("cart");
-}
-
-export function useInvalidateCart() {
-  const queryClient = useQueryClient();
-  return React.useCallback(
-    () => queryClient.invalidateQueries("cart", { exact: true }),
-    [],
+    },
   );
-}
+  return res.data.data.items;
+};
 
-export function useUpsertCart() {
-  return useMutation((values: CartItem) =>
-    axios.put<CartItem[]>(`${API_PATHS.cart}/profile/cart`, values, {
+export const updateCart = async (items: CartItemRec[]) => {
+  const res = await axios.put<CartResponse<Cart>>(
+    `${API_PATHS.cart}/profile/cart`,
+    { items },
+    {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    }),
+    },
   );
-}
+  return res.data.data.items;
+};
+
+export const checkout = async (value: Omit<Order, "id">) => {
+  const res = await axios.post<CartResponse<void>>(
+    `${API_PATHS.cart}/profile/cart/checkout`,
+    value,
+    {
+      headers: {
+        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+      },
+    },
+  );
+  return res.data.data;
+};
