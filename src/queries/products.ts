@@ -5,15 +5,17 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
 import { ListResponse } from "./utils";
 
+export const getProducts = async () => {
+  const res = await axios.get<ListResponse<AvailableProduct>>(
+    `${API_PATHS.product}/products`,
+  );
+  return res.data;
+};
+
 export function useAvailableProducts() {
   return useQuery<ListResponse<AvailableProduct>, AxiosError>(
     "available-products",
-    async () => {
-      const res = await axios.get<ListResponse<AvailableProduct>>(
-        `${API_PATHS.product}/products`,
-      );
-      return res.data;
-    },
+    getProducts,
   );
 }
 

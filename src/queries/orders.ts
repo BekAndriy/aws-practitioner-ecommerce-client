@@ -4,11 +4,19 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import API_PATHS from "~/constants/apiPaths";
 import { OrderStatus } from "~/constants/order";
 import { Order } from "~/models/Order";
+import { CartResponse } from "./utils";
 
 export function useOrders() {
-  return useQuery<Order[], AxiosError>("orders", async () => {
-    const res = await axios.get<Order[]>(`${API_PATHS.order}/order`);
-    return res.data;
+  return useQuery<Order[], AxiosError>("order", async () => {
+    const res = await axios.get<CartResponse<Order[]>>(
+      `${API_PATHS.order}/order`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+        },
+      },
+    );
+    return res.data.data;
   });
 }
 

@@ -4,3 +4,9 @@ export interface ListResponse<I> {
   limit: number;
   total: number;
 }
+
+export interface CartResponse<T> {
+  statusCode: number;
+  message: string;
+  data: T;
+}
